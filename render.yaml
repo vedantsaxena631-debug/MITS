@@ -2,12 +2,11 @@ services:
   # Backend Web Service
   - type: web
     name: mits-hub-backend
-    env: node
+    env: docker
     plan: free
     region: ohio
-    rootDir: backend
-    buildCommand: npm install
-    startCommand: npm start
+    dockerContext: backend
+    dockerfilePath: Dockerfile
     envVars:
       - key: NODE_ENV
         value: production
