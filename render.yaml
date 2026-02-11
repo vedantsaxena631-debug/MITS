@@ -5,6 +5,7 @@ services:
     env: node
     plan: free
     region: ohio
+    rootDir: backend
     buildCommand: npm install
     startCommand: npm start
     envVars:
@@ -28,6 +29,7 @@ services:
     env: static
     plan: free
     region: ohio
+    rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishDir: build
     envVars:
