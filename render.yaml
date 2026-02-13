@@ -1,12 +1,36 @@
 # Render Configuration
 
 services:
-  web:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    environment:
-      - NGINX_HOST=example.com
-      - NGINX_PORT=80
+  # Backend Service
+  - type: web
+    name: mits-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false # Must be configured in Render Dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
 
-staticPublishDir: build/static
+  # Frontend Service
+  - type: static
+    name: mits-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishPath: build
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: mits-backend
+          property: host
