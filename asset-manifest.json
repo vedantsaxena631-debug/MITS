@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/MITS/static/css/main.748d02b4.css",
+    "main.js": "/MITS/static/js/main.2269e288.js",
+    "index.html": "/MITS/index.html",
+    "main.748d02b4.css.map": "/MITS/static/css/main.748d02b4.css.map",
+    "main.2269e288.js.map": "/MITS/static/js/main.2269e288.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.748d02b4.css",
+    "static/js/main.2269e288.js"
+  ]
+}
