@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiBook, FiUsers, FiFileText, FiCalendar, FiTrendingUp, FiAward } from 'react-icons/fi';
+import { FiBook, FiFileText, FiCalendar, FiTrendingUp, FiAward } from 'react-icons/fi';
 
 function StudentDashboard() {
   const [stats, setStats] = useState({

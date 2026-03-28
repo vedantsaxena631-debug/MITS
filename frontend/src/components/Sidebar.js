@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   FiHome, FiBook, FiUsers, FiCalendar, FiMessageSquare,
-  FiSettings, FiLogOut, FiMenu, FiX, FiFileText,
+  FiMenu, FiX, FiFileText,
   FiBell, FiAlertCircle, FiBookOpen
 } from 'react-icons/fi';
 import { useState } from 'react';

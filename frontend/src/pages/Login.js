@@ -119,12 +119,12 @@ function Login({ setUser }) {
                 Remember me
               </span>
             </label>
-            <a
-              href="#"
-              className="text-sm text-amber-500 hover:text-amber-400 transition-colors font-medium"
+            <button
+              type="button"
+              className="text-sm text-amber-500 hover:text-amber-400 transition-colors font-medium bg-transparent border-none cursor-pointer"
             >
               Forgot password?
-            </a>
+            </button>
           </div>
 
           <button
