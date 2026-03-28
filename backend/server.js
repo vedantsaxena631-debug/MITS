@@ -6,6 +6,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const helmet = require('helmet');
 const compression = require('compression');
+const path = require('path');
 
 dotenv.config();
 
@@ -13,43 +14,18 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: function(origin, callback) {
-      if (!origin) return callback(null, true);
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-      if (origin.startsWith(frontendUrl.replace(/\/$/, '')) || origin.includes('.vercel.app') || origin === 'http://localhost:3000') {
-        return callback(null, true);
-      }
-      callback(new Error('Not allowed by CORS'));
-    },
+    origin: '*',
     methods: ['GET', 'POST']
   }
 });
 
 // Middleware
-app.use(helmet());
-app.use(compression());
-
-// CORS Configuration
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  'http://localhost:3000',
-].filter(Boolean);
-
-app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.some(allowed => origin.startsWith(allowed.replace(/\/$/, '')))) {
-      return callback(null, true);
-    }
-    // In production, also allow Vercel preview deployments
-    if (origin.includes('.vercel.app')) {
-      return callback(null, true);
-    }
-    callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable CSP for React app
+  crossOriginEmbedderPolicy: false,
 }));
+app.use(compression());
+app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -61,7 +37,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mits_coll
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error:', err));
 
-// Routes
+// API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/academics', require('./routes/academics'));
@@ -75,6 +51,22 @@ app.use('/api/chat', require('./routes/chat'));
 app.use('/api/grievance', require('./routes/grievance'));
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/admin', require('./routes/admin'));
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'Server is running' });
+});
+
+// Serve React frontend in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from React build
+  app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
+
+  // For any route that doesn't match an API route, serve React's index.html
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
+  });
+}
 
 // Socket.io for real-time chat
 io.on('connection', (socket) => {
@@ -92,11 +84,6 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
   });
-});
-
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'Server is running' });
 });
 
 // Error handling middleware

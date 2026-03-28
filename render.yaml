@@ -1,24 +1,18 @@
-# Render Configuration
+# Render Configuration - Single Service Deployment
 
 services:
-  # Backend Service
   - type: web
-    name: mits-backend
+    name: mits-hub
     env: node
     plan: free
-    rootDir: backend
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: cd backend && npm install && cd ../frontend && npm install && npm run build
+    startCommand: node backend/server.js
     envVars:
-      - key: PORT
-        value: 10000
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false # Must be configured in Render Dashboard
+        sync: false # Set this in Render Dashboard
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRE
         value: 7d
-      - key: FRONTEND_URL
-        sync: false # Set to your Vercel frontend URL in Render Dashboard

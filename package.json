@@ -1,0 +1,14 @@
+{
+  "name": "mits-hub",
+  "version": "1.0.0",
+  "description": "MITS College Management System - Full Stack",
+  "scripts": {
+    "start": "node backend/server.js",
+    "build": "cd frontend && npm install && npm run build",
+    "install-all": "cd backend && npm install && cd ../frontend && npm install",
+    "dev": "cd backend && npm run dev"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

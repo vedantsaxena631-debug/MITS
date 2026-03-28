@@ -1,11 +1,8 @@
 import axios from 'axios';
 
-let API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
-// Robustness check: Ensure API_URL ends with /api for Render deployments
-if (API_URL && !API_URL.endsWith('/api')) {
-    API_URL = `${API_URL.replace(/\/$/, '')}/api`;
-}
+// In production, frontend is served by the same server as the API
+// so we just use a relative URL '/api'. In dev, we use the full localhost URL.
+const API_URL = process.env.REACT_APP_API_URL || '/api';
 
 const api = axios.create({
     baseURL: API_URL,
